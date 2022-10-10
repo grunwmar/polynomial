@@ -8,6 +8,43 @@ class Polynomial:
 
     def __init__(self, *coefficients):
         self._coefficients = coefficients
+        self._var_labels = 3*list('abcdfghkmnpqrtstuvwxyz') \
+         + 2*list('αβγδεζηθκλμνξπρστφχψω') \
+         + ['🐘', '🐎', '🐭', '🐢', '🐬', '🐧','🐫']
+
+    def __getitem__(self, char):
+        exp_map = '⁰¹²³⁴⁵⁶⁷⁸⁹'
+        monome_list = []
+
+        for k, a in enumerate(self._coefficients):
+            if a == 0:
+                continue
+            if a < 0:
+                sign = '- '
+            else:
+                sign = '+ '
+
+            e = ''
+            for i in str(k):
+                e += exp_map[int(i)]
+
+            abs_a = abs(a)
+            if k == 0:
+                monome_list.append(f'{sign}{abs_a}')
+            else:
+                monome_list.append(f'{sign}{abs_a}{char}{e}')
+
+        monome_list.reverse()
+        poly_str = ' '.join(monome_list)
+        if poly_str.startswith('+ '):
+            poly_str = poly_str[2:]
+
+        return poly_str
+
+    def __str__(self):
+        ch = random.choice(self._var_labels)
+        return f"({ch} » {self[ch]})"
+
 
     def evaluate(self, x):
         value = sum(coeff * (x ** exp) for exp, coeff in \
