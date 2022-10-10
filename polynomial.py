@@ -143,3 +143,6 @@ class Polynomial:
     @classmethod
     def deactivate_easteregg(cls):
         cls._VAR_LABELS = cls._EASTEREGG_BK
+
+
+...
