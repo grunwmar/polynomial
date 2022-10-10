@@ -2,15 +2,14 @@ import os
 import math
 import numbers
 import random
-
+import itertools
 
 class Polynomial:
 
+    VAR_LABELS = 'x'
+
     def __init__(self, *coefficients):
         self._coefficients = coefficients
-        self._var_labels = 3*list('abcdfghkmnpqrtstuvwxyz') \
-         + 2*list('αβγδεζηθκλμνξπρστφχψω') \
-         + ['🐘', '🐎', '🐭', '🐢', '🐬', '🐧','🐫']
 
     def __getitem__(self, char):
         exp_map = '⁰¹²³⁴⁵⁶⁷⁸⁹'
@@ -42,7 +41,7 @@ class Polynomial:
         return poly_str
 
     def __str__(self):
-        ch = random.choice(self._var_labels)
+        ch = random.choice(self.VAR_LABELS)
         return f"({ch} » {self[ch]})"
 
 
@@ -62,6 +61,19 @@ class Polynomial:
     @property
     def coefficients(self):
         return self._coefficients
+
+    def __add__(self, polynomial):
+        if not isinstance(polynomial, __class__):
+            raise ValueError
+        new_coeffs = []
+        for a,b in itertools.zip_longest(self._coefficients, polynomial._coefficients, fillvalue=0):
+            new_coeffs.append(a + b)
+        return __class__(*new_coeffs)
+
+    def __sub__(self, polynomial):
+        if not isinstance(polynomial, __class__):
+            raise ValueError
+        return (-1 * polynomial) + self
 
 
     def __rmul__(self, number):
@@ -90,3 +102,9 @@ class Polynomial:
         # to ensure sorted values
         new_coeffs = [monomes[i] for i in range(len(monomes))]
         return self.__class__(*new_coeffs)
+
+
+    def __truediv__(self, number):
+        if not isinstance(number, numbers.Number):
+            raise ValueError
+        return (1/number) * self
