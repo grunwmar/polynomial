@@ -39,6 +39,8 @@ class Polynomial:
             abs_a = abs(a)
             if k == 0:
                 monome_list.append(f'{sign}{abs_a}')
+            elif k == 1:
+                monome_list.append(f'{sign}{abs_a}{char}')
             else:
                 monome_list.append(f'{sign}{abs_a}{char}{e}')
 
