@@ -13,7 +13,7 @@ class Polynomial:
 
     @classmethod
     def set_var_labels(cls, iterable):
-        cls._VAR_LABELS = iterable
+        cls._VAR_LABELS = list(iterable)
 
 
     def __init__(self, *coefficients):
@@ -27,6 +27,7 @@ class Polynomial:
         for k, a in enumerate(self._coefficients):
             if a == 0:
                 continue
+
             if a < 0:
                 sign = '- '
             else:
@@ -37,9 +38,12 @@ class Polynomial:
                 e += exp_map[int(i)]
 
             abs_a = abs(a)
+
             if k == 0:
                 monome_list.append(f'{sign}{abs_a}')
             elif k == 1:
+                if abs_a == 1:
+                    abs_a = ''
                 monome_list.append(f'{sign}{abs_a}{char}')
             else:
                 monome_list.append(f'{sign}{abs_a}{char}{e}')
@@ -57,9 +61,9 @@ class Polynomial:
         ch = random.choice(self._VAR_LABELS)
         return f"{self[ch]}"
 
-
-    def __tuple__(self):
-        return tuple(*self._coefficients)
+    @property
+    def tuple(self):
+        return tuple(self._coefficients)
 
 
     def evaluate(self, x):
@@ -124,6 +128,13 @@ class Polynomial:
         # to ensure sorted values
         new_coeffs = [monomes[i] for i in range(len(monomes))]
         return self.__class__(*new_coeffs)
+
+
+    def __eq__(self, polynomial):
+        return self.coeffs == polynomial.coeffs
+
+    def __neg__(self):
+        return (-1) * self
 
 
     def __truediv__(self, number):
